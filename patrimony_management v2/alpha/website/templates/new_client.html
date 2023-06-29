@@ -1,0 +1,834 @@
+{% extends "base.html" %}
+{% block title %}Novo cliente{% endblock %}
+{% block content %}
+<style>
+    .nav-pills .nav-item .nav-link {
+        background-color: white;
+        color: #133a3b;
+    }
+    
+    .nav-pills .nav-item .nav-link.active {
+        background-color: #133a3b;
+        color: white;
+    }
+
+    .nav>li>a:focus, .nav>li>a:hover {
+    background-color: #eee;
+    }
+    .container {
+        padding: 30px;
+        background-color: #fff;
+        box-shadow: 0px 0px 5px #ccc;
+    }
+
+    .input-block {
+        border: 1px solid #ccc;
+        margin-bottom: 20px;
+        padding: 20px;
+        box-shadow: 0px 0px 5px #ccc;
+        background-color: #fff;
+        transition: all 0.2s ease-in-out;
+    }
+
+    .input-block:hover {
+        box-shadow: 0px 0px 10px #ccc;
+    }
+
+    .input-block-2 {
+        border: 1px solid #ccc;
+        margin-bottom: 20px;
+        padding: 20px;
+        box-shadow: 0px 0px 5px #ccc;
+        background-color: #fff;
+        transition: all 0.2s ease-in-out;
+    }
+
+    .input-block-2:hover {
+        box-shadow: 0px 0px 10px #ccc;
+    }
+
+    .input-block-3 {
+        border: 1px solid #ccc;
+        margin-bottom: 20px;
+        padding: 20px;
+        box-shadow: 0px 0px 5px #ccc;
+        background-color: #fff;
+        transition: all 0.2s ease-in-out;
+    }
+
+    .input-block-3:hover {
+        box-shadow: 0px 0px 10px #ccc;
+    }
+
+    .delete-btn {
+        background-color: transparent;
+        color: rgb(188, 0, 0);
+        border: 2px solid rgb(188, 0, 0);
+        border-radius: 5px;
+        text-transform: uppercase;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .delete-btn:hover {
+        background-color: rgb(188, 0, 0);
+        border-color: rgb(188, 0, 0);
+        color: white;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    select {
+        border-radius: 0;
+    }
+
+    input[type="text"]:focus,
+    input[type="date"]:focus,
+    select:focus {
+        border-color: #ccc;
+        box-shadow: none;
+    }
+
+    .add-btn {
+        background-color: transparent;
+        color: #133a3b;
+        border: 2px solid #133a3b;
+        border-radius: 5px;
+        text-transform: uppercase;
+        font-weight: bold;
+        cursor: pointer;
+        }
+
+    .add-btn:hover {
+        background-color: #0f2d2e;
+        border-color: #0f2d2e;
+        color: white;
+    }
+
+    #loader {
+        color: #0f2d2e;
+        font-size: 45px;
+        text-indent: -9999em;
+        overflow: hidden;
+        width: 1em;
+        height: 1em;
+        border-radius: 50%;
+        position: relative;
+        transform: translateZ(0);
+        animation: mltShdSpin 1.7s infinite ease, round 1.7s infinite ease;
+        }
+
+        @keyframes mltShdSpin {
+        0% {
+            box-shadow: 0 -0.83em 0 -0.4em,
+            0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em,
+            0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
+        }
+        5%,
+        95% {
+            box-shadow: 0 -0.83em 0 -0.4em, 
+            0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em, 
+            0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
+        }
+        10%,
+        59% {
+            box-shadow: 0 -0.83em 0 -0.4em, 
+            -0.087em -0.825em 0 -0.42em, -0.173em -0.812em 0 -0.44em, 
+            -0.256em -0.789em 0 -0.46em, -0.297em -0.775em 0 -0.477em;
+        }
+        20% {
+            box-shadow: 0 -0.83em 0 -0.4em, -0.338em -0.758em 0 -0.42em,
+            -0.555em -0.617em 0 -0.44em, -0.671em -0.488em 0 -0.46em, 
+            -0.749em -0.34em 0 -0.477em;
+        }
+        38% {
+            box-shadow: 0 -0.83em 0 -0.4em, -0.377em -0.74em 0 -0.42em,
+            -0.645em -0.522em 0 -0.44em, -0.775em -0.297em 0 -0.46em, 
+            -0.82em -0.09em 0 -0.477em;
+        }
+        100% {
+            box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 
+            0 -0.83em 0 -0.44em, 0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
+        }
+        }
+
+        @keyframes round {
+            0% { transform: rotate(0deg) }
+            100% { transform: rotate(360deg) }
+        }
+
+</style>
+<h1>Novo Cliente</h1>
+<div class="container mt-5">
+    
+    <!-- Nav tabs -->
+    <ul class="nav nav-pills nav-fill">
+        <li class="nav-item">
+            <a class="nav-link active" data-toggle="tab" href="#info">Informações Pessoais</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#family">Estrutura familiar</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#assets">Ativos Financeiros</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#finances">Informações Financeiras</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#risk-management">Gestão de Risco</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#objectives">Objetivos</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#finPlan">Indepedência Financeira</a>
+        </li>
+    </ul>
+
+    <br>
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div id="info" class="tab-pane fade show active">
+            <form method="POST">
+                <div class="form-row">
+                  <div class="form-group col-md-6">
+                    <label for="fName">Nome completo</label>
+                    <input type="text" class="form-control" id="fName" name="fName" placeholder="Nome completo" required/>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="cpf">CPF</label>
+                    <input type="text" class="form-control" id="cpf" placeholder="CPF" onkeypress="$(this).mask('000.000.000-00');">
+                  </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                    <label for="birthday">Data de Nascimento</label>
+                    <input type="date" class="form-control" id="birthday" name="birthday" placeholder="Data de nascimento" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                    <label for="civilState">Estado Civil</label>
+                    <select id="civilState" class="form-control">
+                        <option selected>Solteiro(a)</option>
+                        <option>Casado(a)</option>
+                        <option>Divorciado(a)</option>
+                        <option>Viúvo(a)</option>
+                    </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="inputEmail4">E-mail</label>
+                        <input type="email" class="form-control" id="inputEmail4" placeholder="E-mail">
+                    </div>
+                    
+                    <div class="form-group col-md-6">
+                      <label for="phone">Telefone</label>
+                      <input type="text" id="phone" class="form-control" placeholder="(XX) XXXXX-XXXX" onkeypress="$(this).mask('(00) 00000-0000');">
+                    </div>
+                  </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="address">Endereço</label>
+                        <input type="text" id="address" class="form-control" placeholder="Endereço">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="occupation">Profissão</label>
+                        <input type="text" id="occupation" class="form-control" placeholder="Profissão">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="workplace">Local de Trabalho</label>
+                        <input type="text" id="workplace" class="form-control" placeholder="Local de Trabalho">
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label for="investProf">Perfil de investidor</label>
+                        <select id="investProf" class="form-control">
+                            <option selected>Ultra-Conservador</option>
+                            <option>Conservador</option>
+                            <option>Moderado</option>
+                            <option>Arrojado</option>
+                            <option>Agressivo</option>
+                        </select>
+                    </div>
+                    <script>
+                        function formatNumber(input) {
+                            let num = input.value.replace(/[\D]+/g, '');
+                            num = num.replace(/(\d{1,2})$/, ',$1');
+                            num = num.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+
+                            input.value = num;
+                        }
+
+                        function formatRate(input) {
+                            let num = input.value.replace(/[\D]+/g, '');
+                            num = num.replace(/(\d{1,2})$/, ',$1');
+                            num = num.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+
+                            input.value = num + "%";
+                        }
+                    </script>
+                </div>
+              
+              <div class="form-group">
+                <label for="tbox1">Me fale um pouco sobre você (naturalidade, formação...)</label>
+                <textarea class="form-control" rows="4" id="tbox1"></textarea>
+                <br>
+                <label for="tbox2">Conte-me sobre sua família. Possui dependentes?</label>
+                <textarea class="form-control" rows="4" id="tbox2"></textarea>
+                <br>
+                <label for="tbox3">Como planeja a educação dos seus dependentes?</label>
+                <textarea class="form-control" rows="4" id="tbox3"></textarea>
+                <br>
+                <label for="tbox4">Qual a coisa mais importante que o dinheiro lhe proporciona atualmente?</label>
+                <textarea class="form-control" rows="4" id="tbox4"></textarea>
+                <br>
+                <label for="tbox5">Quais são os fatores ou circunstâncias em sua vida que podem afetar o seu planejamento financeiro?</label>
+                <textarea class="form-control" rows="4" id="tbox5"></textarea>
+                <br>
+                <label for="tbox6">Onde trabalha? Há quanto tempo? Quais são as suas perspectivas profissionais?</label>
+                <textarea class="form-control" rows="4" id="tbox6"></textarea>
+                <br>
+                <label for="tbox7">O que você sentiria falta do trabalho que realiza hoje em dia?</label>
+                <textarea class="form-control" rows="4" id="tbox7"></textarea>
+                <br>
+                <label for="tbox8">Como você se organiza financeiramente? Possui orçamento?</label>
+                <textarea class="form-control" rows="4" id="tbox8"></textarea>
+                <br>
+                <label for="tbox9">Qual sua renda mensal? Quais as fontes desta renda?</label>
+                <textarea class="form-control" rows="4" id="tbox9"></textarea>
+                <br>
+                <label for="tbox10">Qual o seu gasto mensal familiar? (Padrão de Vida)</label>
+                <textarea class="form-control" rows="4" id="tbox10"></textarea>
+                <br>
+                <label for="tbox11">Qual a sua capacidade mensal de poupança? Você é um poupador disciplinado?</label>
+                <textarea class="form-control" rows="4" id="tbox11"></textarea>
+                <br>
+                <label for="tbox12">Quais são as suas proteções atuais? (pessoal, profissional e patrimonial)</label>
+                <textarea class="form-control" rows="4" id="tbox12"></textarea>
+                <br>
+                <label for="tbox13">Quais as principais procupações que sente quando pensa em segurança?</label>
+                <textarea class="form-control" rows="4" id="tbox13"></textarea>
+                <br>
+                <label for="tbox14">O que é independência financeira para você?</label>
+                <textarea class="form-control" rows="4" id="tbox14"></textarea>
+                <br>
+                <label for="tbox15">Sente alguma preocupação quando pensa em Indepedência Financeira?</label>
+                <textarea class="form-control" rows="4" id="tbox15"></textarea>
+                <br>
+                <label for="tbox16">Quando espera atingir este momento? Tem algum montante em mente?</label>
+                <textarea class="form-control" rows="4" id="tbox16"></textarea>
+                <br>
+                <label for="tbox17">Você já tem alguma estrutura pensando em Planejamento Sucessório?</label>
+                <textarea class="form-control" rows="4" id="tbox17"></textarea>
+
+            </form>
+        </div>
+    </div>
+
+    <div id="family" class="tab-pane fade">
+        <button id="add-inputs-btn" class="btn add-btn">Adicionar familiar</button>
+        <div id="inputs-container" class="mt-3"></div>
+        <script src="{{ url_for('static', filename='family.js') }}"></script>
+    </div>
+
+    <div id="finances" class="tab-pane fade">
+        <h3>Patrimônio</h3>
+        <br>
+        <form method="POST" id="fin">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                <label for="patrFin">Patrimônio Financeiro (R$)</label>
+                <input type="text" class="form-control" id="patrFin" name="patrFin" placeholder="Patrimônio Financeiro (R$)" readonly>
+                </div>
+                <div class="form-group col-md-6">
+                <label for="patrImb">Patrimônio Imobilizado (R$)</label>
+                <input type="text" class="form-control" id="patrImb" placeholder="Patrimônio Imobilizado (R$)" onkeyup="totalPat(); risk_management()">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="totalPatr">Patrimônio Total</label>
+                    <input type="text" class="form-control" id="totalPatr" name="totalPatr" placeholder="Patrimônio Total (R$)" readonly>
+                </div>
+            </div>
+
+            <br>
+            <h3>Orçamento Familiar</h3>
+            <br>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="saving">Capacidade de poupança (mensal) (R$):</label>
+                    <input type="text" class="form-control" id="saving" name="saving" placeholder="Capacidade de Poupança (R$)" readonly>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="income">Receita total (mensal) (R$):</label>
+                    <input type="text" class="form-control receita" id="income" placeholder="Receita Total (R$)" onkeyup="updatePoupanca(); savings(); risk_management()">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="expenses">Despesas totais (mensal) (R$):</label>
+                    <input type="text" class="form-control despesas" id="expenses" placeholder="Despesas totais (R$)" onkeyup="updatePoupanca(); savings(); risk_management()">
+                </div>
+            </div>
+        </form>
+        <script>
+            function updatePoupanca() {
+                const receita = document.getElementById("income");
+                const receita2 =  Number(receita.value.replace(",", "."));
+                const despesas = document.getElementById("expenses")
+                const despesas2 = Number(despesas.value.replace(",", "."));
+                let diff = 0;
+                diff = receita2 - despesas2
+                document.getElementById("saving").value = diff.toFixed(2).replace(".", ",");
+            };
+        </script>
+        <script>
+            function totalPat() {
+                const fin = document.getElementById("patrFin");
+                const fin2 =  Number(fin.value.replace(".","").replace(",", "."));
+                const imob = document.getElementById("patrImb");
+                const imob2 = Number(imob.value.replace(",","."));
+
+                let sum = 0;
+                sum = fin2 + imob2
+                
+                var soma = sum.toLocaleString()
+                document.getElementById("totalPatr").value = soma;
+            }
+            function savings() {
+                const income = document.getElementById("income");
+                const income2 = Number(income.value.replace(",","."));
+                const expense = document.getElementById("expenses");
+                const expense2 = Number(expense.value.replace(",","."));
+
+                let diff = 0;
+                diff = income2 - expense2;
+
+                var diff2 = diff.toLocaleString();
+                document.getElementById("saving").value = diff2;
+            }
+        </script> 
+        <br>
+    </div>
+
+    <div id="risk-management" class="tab-pane fade">
+        <div class="form-row w-25">
+            <label for="itcmd">Taxa de ITCMD (%)</label>
+            <input type="text" class="form-control" for="itcmd" id="itcmd" onkeyup="risk_management()">
+        </div>
+        <br>
+        <table style="border-collapse: collapse; width: 100%; border: 1px solid #ddd;">
+            <tr style="background-color: #133a3b;">
+              <th style="padding: 8px; text-align: left; border-bottom: 1px solid #ddd; color:white">Patrimônio</th>
+              <th style="padding: 8px; text-align: left; border-bottom: 1px solid #ddd;"></th>
+            </tr>
+            <tr>
+              <td style="padding: 8px; border-bottom: 1px solid #ddd;">Imobilizado</td>
+              <td id="imb" style="padding: 8px; border-bottom: 1px solid #ddd;">R$ -</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px; border-bottom: 1px solid #ddd;">Financeiro</td>
+              <td id="fin2" style="padding: 8px; border-bottom: 1px solid #ddd;">R$ -</td>
+            </tr>
+            <tr style="background-color: #d3ffdd;">
+                <th style="padding: 8px; text-align: left; border-bottom: 1px solid #ddd; color:#133a3b">Consolidado</td>
+              <td id="cons" style="padding: 8px; border-bottom: 1px solid #ddd; color:#133a3b">R$ -</td>
+            </tr>
+            <tr style="background-color: #133a3b;">
+              <th style="padding: 8px; text-align: left; border-bottom: 1px solid #ddd; color:white">Sucessão Familiar</th>
+              <th style="padding: 8px; text-align: left; border-bottom: 1px solid #ddd;"></th>
+            </tr>
+            <tr>
+              <td style="padding: 8px; border-bottom: 1px solid #ddd;">Custos com ITCMD</td>
+              <td id="itcmdCost" style="padding: 8px; border-bottom: 1px solid #ddd;">R$ -</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px; border-bottom: 1px solid #ddd;">Estimativa de custos advocatícios</td>
+              <td id="advCost" style="padding: 8px; border-bottom: 1px solid #ddd;">R$ -</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px; border-bottom: 1px solid #ddd;">Estimativa de taxas cartoriais</td>
+              <td id="cartCost" style="padding: 8px; border-bottom: 1px solid #ddd;">R$ -</td>
+            </tr>
+            <tr style="background-color: #d3ffdd;">
+                <th style="padding: 8px; text-align: left; border-bottom: 1px solid #ddd; color:#133a3b">Estimativas de custos</td>
+              <td id="totCost" style="padding: 8px; border-bottom: 1px solid #ddd; color:#133a3b">R$ -</td>
+            </tr>
+            <tr style="background-color: #133a3b;">
+              <th style="padding: 8px; text-align: left; border-bottom: 1px solid #ddd; color:white">Fluxo de caixa mensal</th>
+              <th style="padding: 8px; text-align: left; border-bottom: 1px solid #ddd;"></th>
+            </tr>
+            <tr>
+              <td style="padding: 8px; border-bottom: 1px solid #ddd;">Compromisso financeiro mensal</td>
+              <td id="expns" style="padding: 8px; border-bottom: 1px solid #ddd;">R$ -</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px; border-bottom: 1px solid #ddd;">Renda mensal familiar</td>
+              <td id="incm" style="padding: 8px; border-bottom: 1px solid #ddd;">R$ -</td>
+            </tr>
+            <tr style="background-color: #d3ffdd;">
+                <th style="padding: 8px; text-align: left; border-bottom: 1px solid #ddd; color:#133a3b">Capacidade de poupança</td>
+              <td id="svng" style="padding: 8px; color:#133a3b">R$ -</td>
+            </tr>
+          </table>
+          
+    </div>
+
+    <script>
+
+        function risk_management() {
+
+            var inc = parseFloat(document.getElementById("income").value.replace(',','.'));
+            var exp = parseFloat(document.getElementById("expenses").value.replace(',','.'));
+            var imb = parseFloat(document.getElementById("patrImb").value.replace(',','.'));
+            var fin = document.getElementById("patrFin").value;
+            var pat = document.getElementById("totalPatr").value;
+
+            var thImb = document.getElementById("imb");
+            var imb2 = imb.toLocaleString();
+
+            if (isNaN(imb2)){
+                imb2 = "-"
+            }
+
+            thImb.innerHTML = "R$ " + imb2;
+
+            var thFin = document.getElementById("fin2");
+
+            if (isNaN(fin)){
+                fin = "-"
+            }
+            
+            thFin.innerHTML = "R$ " + fin;
+
+            var thCons = document.getElementById("cons");
+            
+            if (isNaN(pat)){
+                pat = "-"
+            }
+
+            thCons.innerHTML = "R$ " + pat;
+
+            var thItcmdCost = document.getElementById("itcmdCost");
+
+            var itcmdRate = document.getElementById("itcmd");
+
+            itcmdCost = ((parseFloat(itcmdRate.value.replace(',','.'))/100) * parseFloat(pat.replace('.','').replace(',','.')));
+
+            if (isNaN(itcmdCost)){
+                itcmdCost = "-"
+            }
+
+            thItcmdCost.innerHTML = "R$ " + itcmdCost.toLocaleString();
+
+            var thAdvCost = document.getElementById("advCost");
+            
+            advCost = (parseFloat(pat.replace('.','').replace(',','.')) * 0.1);
+
+            if (isNaN(advCost)){
+                advCost = "-"
+            }
+
+            thAdvCost.innerHTML = "R$ " + advCost.toLocaleString();
+
+            var thCartCost = document.getElementById("cartCost");
+
+            cartCost = (parseFloat(pat.replace('.','').replace(',','.')) * 0.02);
+
+            if (isNaN(cartCost)){
+                cartCost = "-"
+            }
+
+            thCartCost.innerHTML = "R$ " + cartCost.toLocaleString();
+
+            var totCost = document.getElementById("totCost");
+
+            if (isNaN(cartCost) || isNaN(itcmdCost) || isNaN(advCost)){
+                totCost.innerHTML = "R$ -"
+            }
+            else{
+                totCost.innerHTML = "R$ " + (itcmdCost + advCost + cartCost).toLocaleString()
+            }
+        
+            var thExpns = document.getElementById("expns");
+
+            if (isNaN(exp)){
+                exp = "-"
+            }
+
+            thExpns.innerHTML = "R$ " + exp.toLocaleString();
+
+            var thInc = document.getElementById("incm");
+            if (isNaN(inc)){
+                inc = "-"
+            }
+
+            thInc.innerHTML = "R$ " + inc.toLocaleString();
+
+            var thSvng = document.getElementById("svng");
+
+            if (isNaN(inc) || isNaN(exp)){
+                thSvng.innerHTML = "R$ -";
+            }
+            else{
+                thSvng.innerHTML = "R$ " + (inc - exp).toLocaleString();
+            }
+        
+        }
+    </script>
+
+    <div id="assets" class="tab-pane fade">
+        <button id="add-inputs-btn-3" class="btn add-btn">Adicionar ativo</button>
+        <div id="inputs-container-3" class="mt-3"></div>
+        <script src="{{ url_for('static', filename='assets.js') }}"></script>
+    </div>
+
+    <div id="objectives" class="tab-pane fade">
+        <button id="add-inputs-btn-2" class="btn add-btn">Adicionar Objetivo</button>
+        <div id="inputs-container-2" class="mt-3"></div>
+        <script type="text/javascript" src="{{ url_for('static', filename='objectives.js') }}"></script>
+    </div>
+
+    <div id="finPlan" class="tab-pane fade">
+        <form method="POST">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="retAge">Idade de aposentadoria:</label>
+                    <input type="text" class="form-control" id="retAge" name="retAge" onkeyup="calculatePMT()" placeholder="Idade de aposentadoria" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="desIncome">Renda desejada na aposentadoria (R$):</label>
+                    <input type="text" class="form-control" id="desIncome" name="desIncome" onkeyup="calculatePMT()" placeholder="Renda desejada (R$)" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="initCont">Aporte inicial (R$):</label>
+                    <input type="text" class="form-control" id="initCont" name="initCont" onkeyup="calculatePMT()" placeholder="Aporte inicial (R$)">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="cont">Aporte mensal ideal (R$):</label>
+                    <input type="text" class="form-control" id="cont" name="cont" placeholder="Aporte mensal (R$)" readonly>
+                    <input type="hidden" value="{{ rate }}" id="iRm">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="realCont">Aporte real (R$):</label>
+                    <input type="text" class="form-control" id="realCont" name="realCont" placeholder="Aporte real (R$)">
+                </div>
+            </div>
+            <div class="form-row">
+                <label for="indepActPlan">Plano de ação</label>
+                <textarea class="form-control" rows="4" id="indepActPlan"></textarea>
+                <br>
+            </div>
+            
+        </form>
+        <script>
+
+            function calculatePMT() {
+                var birthdate = document.getElementById('birthday').value
+                var currentDate = new Date(); // Get the current date
+                var birthDate = new Date(birthdate); // Convert the birthdate string to a Date object
+            
+                var age = currentDate.getFullYear() - birthDate.getFullYear(); // Calculate the age
+                var monthDiff = currentDate.getMonth() - birthDate.getMonth(); // Calculate the difference in months
+            
+                // If the current month is less than the birth month or
+                // if the current month is the same as the birth month but the current day is less than the birth day,
+                // then subtract 1 from the age to account for the upcoming birthday
+                if (monthDiff < 0 || (monthDiff === 0 && currentDate.getDate() < birthDate.getDate())) {
+                age--;
+                }
+            
+                var retAge = document.getElementById('retAge').value;
+                var timeforRet = (retAge - age) * 12;
+                
+                var iRm = document.getElementById('iRm').value;
+                ir = parseFloat(iRm);
+                var nper = timeforRet;
+                nper = parseInt(nper);
+                var pv = document.getElementById('initCont').value;
+                pv = parseFloat(pv);
+                var desIncome = document.getElementById('desIncome').value;
+                desIncome1 = parseFloat(desIncome);
+                var fv = desIncome1/ir;
+                
+                let pmt = 0;
+                
+                pmt = (ir * ((-pv) * Math.pow ((ir+1), nper) + fv)) / ((ir + 1) * (Math.pow((ir+1), nper) - 1));
+                
+                var cont = document.getElementById('cont');
+                cont.value = Math.round(pmt * 100)/100;
+            }
+        </script>
+    </div>
+</div>
+<br>
+<button class="btn add-btn" id="save" type="submit">Salvar</button>
+<input class="hidden" id="last_id" type="hidden" value="{{ id }}">
+<div id="loader"></div>
+
+<script>
+    
+    var loader = document.getElementById("loader");
+    loader.style.display = "none";
+    const submitBtn = document.getElementById('save');
+
+    submitBtn.addEventListener('click', () => {
+        const forms = document.querySelectorAll('form'); // seleciona todos os formulários na página
+
+        const formData = new FormData();
+
+        // itera através de cada formulário e seus campos de entrada
+        forms.forEach(form => {
+        const inputs = form.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
+                if (input.type === 'file') {
+                formData.append(input.id, input.files[0]);
+                }
+                else {
+                formData.append(input.id, input.value);
+                }
+            });
+        });
+        
+        {   
+            let cond = true;
+
+            var fName = document.getElementById('fName');
+            var bday = document.getElementById('birthday');
+            var retAge = document.getElementById('retAge');
+            var desIncome = document.getElementById('desIncome');
+            var initCont = document.getElementById('initCont');
+            var realCont = document.getElementById('realCont');
+            var income = document.getElementById('income');
+            var expenses = document.getElementById('expenses');
+
+            var nFamily = document.querySelectorAll('.input-block').length;
+            var nObj = document.querySelectorAll('.input-block-2').length;
+            var nAssets = document.querySelectorAll('.input-block-3').length;
+
+            for (let i = 1; i < nFamily + 1; i++) {
+                var famName = document.getElementById(`nome-${i}`);
+                var famBday = document.getElementById(`data-nascimento-${i}`);
+                var famParent = document.getElementById(`parentesco-${i}`);
+                var famReg = document.getElementById(`regime-casamento-${i}`);
+
+                if (famName.value == ''){
+                    cond = false;
+                    alert(`Insira o nome do familiar ${i}.`);
+                    break;
+                }
+                else if (famBday.value == ''){
+                    cond = false;
+                    alert(`Insira a data de nascimento do familiar ${i}`);
+                    break;
+                }
+            }
+
+            for (let i = 1; i < nAssets + 1; i++){
+                var assetName = document.getElementById(`asset-${i}`);
+                var assetValue = document.getElementById(`assetValue-${i}`);
+
+                if (assetName.value == '') {
+                    alert(`Insira o nome do ativo ${i}`);
+                    cond = false;
+                    break;
+                }
+                else if (assetValue == '') {
+                    alert(`Insira o valor atual do ativo ${i}`);
+                    cond = false;
+                    break;
+                }
+            }
+
+            for (let i = 1; i < nObj + 1; i++){
+                var objValue = document.getElementById(`value-${i}`);
+                var objTime = document.getElementById(`months-${i}`);
+                var realValue = document.getElementById(`realValue-${i}`);
+
+                if (objValue == ''){
+                    alert(`Insira o valor financeiro do objetivo ${i}`);
+                    cond = false;
+                    break;
+                }
+                else if (objTime == ''){
+                    alert(`Insira o prazo do objetivo ${i}`);
+                    cond = false;
+                    break;
+                }
+                else if (realValue == ''){
+                    alert(`Insira o valor do aporte mensal real do objetivo ${i}`);
+                    cond = false;
+                    break;
+                }
+            }
+
+            if (fName.value == '') {
+                alert("Insira o nome do cliente.");
+                cond = false;
+            }
+            else if (bday.value == ''){
+                alert("Insira a data de nascimento do cliente.");
+                cond = false;
+            }
+            else if (income.value == ''){
+                alert('Insira o valor da receita mensal do cliente.');
+                cond = false;
+            }
+            else if (expenses.value == ''){
+                alert('Insira o valor das despesas mensais do cliente.');
+                cond = false;
+            }
+            else if (retAge.value == ''){
+                alert("Insira a idade desejada de aposentadoria.");
+                cond = false;
+            }
+            else if (desIncome.value == ''){
+                alert("Insira a renda desejada na aposentadoria.");
+                cond = false;
+            }
+            else if (initCont.value == ''){
+                initCont.value = 0;
+            }
+            else if (realCont.value == ''){
+                alert("Insira o valor da contribuição real.");
+                cond = false;
+            }
+
+            if (cond == true){
+                alert("Cliente registrado.")
+                document.getElementById("loader").style.display = "block";
+                var id = Number(document.getElementById("last_id").value) + 1
+                var loader = document.getElementById("loader");
+                loader.style.display = "block";
+                setTimeout(function() {
+                    window.location.href = `/report/${id}`;
+                }, 5000);
+            }
+
+            formData.append('nFamily', nFamily)
+            formData.append('nObj', nObj)
+            formData.append('nAssets', nAssets)
+
+            // envia os dados para o backend usando uma solicitação AJAX
+            fetch('/new_client', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => console.log(data))
+            .catch(error => console.error(error));
+
+        }
+
+    });
+
+</script>
+{% endblock %}

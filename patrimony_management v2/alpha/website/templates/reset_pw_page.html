@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Redefinir senha{% endblock %}
+{% block content %}
+<form method="POST">
+    <br>
+    <h1 align="left">Redefinir senha</h1>
+    <div class="form-row">
+        <div class="col-7">
+            <label for="password1">Nova senha</label>
+            <input type="password" class="form-control" id="passowrd1" name="password1" placeholder="Nova senha">
+            <br>
+            <label for="password2">Confirmar nova senha</label>
+            <input type="password" class="form-control" id="passowrd2" name="password2" placeholder="Confirmar nova senha">
+        </div>
+    </div>
+    <br>
+    <button type="submit" class="btn custom-btn">Redefinir</button>
+</form>
+
+{% endblock %}

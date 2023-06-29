@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+{% block title %}Alocação sugerida{% endblock %}
+{% block content %}
+<style>
+    .styled-table {
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 0.9em;
+    font-family: sans-serif;
+    min-width: 400px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    margin-left: auto;
+    margin-right: auto;
+    }
+
+    .styled-table thead tr {
+    background-color: #133a3b;
+    color: #ffffff;
+    text-align: left;
+    }
+
+    .styled-table th,
+    .styled-table td {
+        padding: 12px 15px;
+    }
+
+    .styled-table tbody tr {
+    border-bottom: 1px solid #dddddd;
+    }
+
+    .styled-table tbody tr:nth-of-type(even) {
+        background-color: #f3f3f3;
+    }
+
+    .styled-table tbody tr:last-of-type {
+        border-bottom: 2px solid #133a3b;
+    }
+
+    .styled-table tbody tr.active-row {
+    font-weight: bold;
+    color: #009879;
+    }
+</style>
+<br>
+<h4 style="text-align: right;">{{ today }}</h4>
+<h1>Alocação sugerida</h1>
+{% if not df.empty %}
+<br>
+<div>
+    <table class="styled-table" id="global">
+        <thead>
+            <tr>
+                <th colspan="3" style="text-align: center;">Carteira global</th>
+            </tr>
+            <tr>
+                <th>Classe</th>
+                <th>Volume</th>
+                <th>%</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% set df2 = df.drop(['Instituição'], axis=1) %}
+            {% set df3 = df.groupby(['Classe']).sum() %}
+            {% set n = 1 %}
+
+            {% for i in classes %}
+                <tr>
+                    <td>{{ i }}</td>
+                    <td>R$ {% if i in df3.index.values.tolist() %} {{ df3.loc[i]['Valor'] }} {% else %} - {% endif %}</td>
+                    <td><input type="text" style="width: 50px" onkeyup="updateValues()" value="{% if i in df3.index.values.tolist() %}{{ '%0.2f' | format(df3.loc[i]['Valor']/df3['Valor'].sum() * 100) | float }}{% else %}-{% endif %}"></td>
+                </tr>
+
+            {% endfor %}
+
+            <tr style="background-color: #d3ffdd;">
+                <td>Total</td>
+                <td>R$ {{ df3['Valor'].sum() }}</td>
+                <td>100%</td>
+            </tr>
+            
+            <br>
+        </tbody>
+    </table>
+</div>
+<button type="submit" id="update" class="add-btn">Atualizar Carteira</button>
+
+<script>
+
+    function updateValues(){
+
+        var table = document.getElementById("global");
+
+        var total = document.querySelector("body > div > div > table > tbody > tr:nth-child(14) > td:nth-child(2)").textContent;
+        
+        var numTotal = Number(total.slice(3));
+
+        for (i = 1; i < 14; i++){
+
+            var tag = document.querySelector(`body > div > div > table > tbody > tr:nth-child(${i}) > td:nth-child(2)`);
+
+            var perc = document.querySelector(`body > div > div > table > tbody > tr:nth-child(${i}) > td:nth-child(3) > input`);
+            
+            var percVal = perc.value;
+
+            tag.textContent = "R$ " + (Number(percVal.replace(',','.'))/100 * numTotal).toLocaleString();
+
+            if (tag.textContent == "R$ NaN" || tag.textContent == 'R$ 0'){
+                tag.textContent = "R$ -"
+            }
+        }
+    }
+    /*
+    const updateBtn = document.getElementById('update');
+
+    const percArray = Array()
+
+    updateBtn.addEventListener('click', () => {
+        const table = document.querySelectorAll('table'); // seleciona todos os formulários na página
+
+        // itera através de cada formulário e seus campos de entrada
+        table.forEach(table => {
+        const inputs = form.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
+                if (input.type === 'file') {
+                percArray.push(input.files[0]);
+                }
+                else {
+                percArray.push(input.value);
+                }
+            });
+        });
+        
+        {
+
+            tableData.append('nFamily', nFamily)
+            tableData.append('nObj', nObj)
+            tableData.append('nAssets', nAssets)
+
+            // envia os dados para o backend usando uma solicitação AJAX
+            fetch('/suggestion', {
+                method: 'POST',
+                body: tableData
+            })
+            
+            .then(response => response.json())
+            .then(data => console.log(data))
+            .catch(error => console.error(error));
+
+        }
+
+    });*/
+</script>
+{% endif %}
+{% endblock %}

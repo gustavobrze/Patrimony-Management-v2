@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block content %}
+<form method="POST">
+    <br>
+    <h1 align="left">Login</h1>
+    <br>
+    <div class="form-row">
+        <div class="col-7">
+            <label for="email">E-mail</label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="Insira o e-mail">
+            <br>
+            <label for="password">Senha</label>
+            <input type="password" class="form-control" id="password" name="password" placeholder="Insira a senha">
+        </div>
+    </div>
+    <br/>
+    
+    <button type="submit" class="btn custom-btn">Login</button>
+
+    <a href="/reset_password" style="color:#133a3b; margin-left: 20px;">Esqueci minha senha</a>
+
+</form>
+
+{% endblock %}

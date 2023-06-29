@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Criar conta{% endblock %}
+{% block content %}
+<form method="POST">
+    <br>
+    <h1 align="left">Criar conta</h1>
+    <div class="form-row">
+        <div class="col-7">
+            <label for="email">E-mail</label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="Insira o e-mail">
+            <br>
+            <label for="firstName">Nome</label>
+            <input type="text" class="form-control" id="firstName" name="firstName" placeholder="Insira o nome">
+            <br>    
+            <label for="password1">Senha</label>
+            <input type="password" class="form-control" id="password1" name="password1" placeholder="Insira a senha">
+            <br>
+            <label for="password2">Confirmar a senha</label>
+            <input type="password" class="form-control" id="password2" name="password2" placeholder="Confirme a senha">
+            <br>
+        </div>
+    </div>
+    <br/>
+    <button type="submit" class="btn custom-btn">Criar conta</button>
+    <br>
+</form>
+{% endblock %}

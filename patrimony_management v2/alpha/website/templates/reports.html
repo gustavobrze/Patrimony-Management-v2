@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% block title %}Relatórios{% endblock %}
+{% block content %}
+<br>
+<h4 style="text-align: right;">{{ today }}</h4>
+<h1>Relatórios</h1>
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<br>
+<div>
+    <h3>
+        {{ clientData['name'] }}
+    </h3>
+    <br>
+    <h4>
+        {{ clientData['age']}} anos
+        &nbsp
+        &nbsp
+        &nbsp
+        &nbsp
+        Aposentadoria aos {{ clientData['retAge'] }} anos
+        &nbsp
+        &nbsp
+        &nbsp
+        &nbsp
+        {{ clientData['civSt']}}
+        &nbsp
+        &nbsp
+        &nbsp
+        &nbsp
+        {% if clientData['civSt'] == 'Casado(a)' %}
+            Nome do cônjuge: {{ clientData['conjuge'] }}
+        {% endif %}
+        <br>
+        <br>
+        {% if clientData['filho_1'] %}
+            Filhos:
+            &nbsp
+            &nbsp
+            &nbsp
+            &nbsp
+            {% for k, v in clientData.items() %}
+                {% if k.startswith('filho_') %}
+                    {{ v }}
+                    &nbsp
+                    &nbsp
+                    &nbsp
+                    &nbsp
+                {% endif %}
+            {% endfor %}
+            <br>
+            <br>
+        {% endif %}
+        Perfil de Investidor: {{ clientData['profile'] }}
+        &nbsp
+        &nbsp
+        &nbsp
+        &nbsp
+        Patrimônio financeiro: R$ {{ clientData['pl'] }}
+        &nbsp
+        &nbsp
+        &nbsp
+        &nbsp
+        Capacidade de poupança: R$ {{ clientData['saving'] }}
+    </h4>
+</div>
+<div id="graphs">
+    {{ indep[0]|safe }}
+    <br>
+    <br>
+    <h4>
+        Para atingir a independência financeira e obter uma renda mensal de R$ {{ indep[6] }} 
+        com um aporte inicial de R$ {{ indep[2] }}, são necessários aportes mensais de R$ {{ indep[3] }} 
+        pelo tempo de {{ indep[1] }} anos.
+        <br>
+        <br>
+        Com um aporte mensal de R$ {{ indep[4] }} pelo mesmo período, seria acumulado um valor 
+        de R$ {{ indep[7] }}, possibilitando uma renda mensal no valor de R$ {{ indep[8] }}.
+        <br>
+        <br>
+    </h4>
+        {% if indep[-1] != '' %}
+            <h3>Plano de ação:</h3>
+            <br>
+            <h4>{{ indep[-1] }}</h4>    
+        {% endif %}
+        <br>
+    <br>
+    <br>
+    {% for data, graph in objs %}
+        {{ graph|safe}}
+        <br>
+        <br>
+        <h4>
+            Para acumular o valor necessário para {{ data[0] }} com um aporte inicial de R$ {{ data[2] }}, 
+            são necessários aportes mensais de R$ {{ data[4] }} pelo tempo de {{ data[1] }}.
+            <br>
+            <br>
+            Com um aporte mensal de R$ {{ data[3] }} pelo mesmo período, seria acumulado um valor 
+            de R$ {{ data[5] }}.
+            <br>
+            <br>
+        </h4>
+            {% if data[-1] != '' %}
+                <h3>Plano de ação:</h3>
+                <br>
+                <h4>{{ data[-1] }}</h4>
+            {% endif %}
+            <br>
+    {% endfor %}
+</div>
+{% endblock %}
